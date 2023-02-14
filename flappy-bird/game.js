@@ -8,17 +8,17 @@ const flappyImg = new Image();
 flappyImg.src = "assets/flappy_dunk.png";
 
 // Game constant variables
-const flappy_speed = -5;
-const bird_width = 40;
-const bird_height = 30;
-const wall_height = 50;
-const wall_gap = 125;
+const Flappy_Speed = -5;
+const Bird_Width = 40;
+const Bird_Height = 30;
+const Wall_Width = 50;
+const Wall_Gap = 125;
 
 // Bird Variables
 let birdX = 50;
 let birdY = 50;
-let birdVelocity = 0;
-let birdAcceleration = 0.1;
+let birdVelocity = 0.2;
+let birdAcceleration = 0.2;
 
 // Wall Variables
 let wallX = 400;
@@ -31,7 +31,7 @@ let highScore = 0;
 
 document.body.onkeyup = function (e) {
   if (e.code == "Space") {
-    birdVelocity = flappy_speed;
+    birdVelocity = Flappy_Speed;
   }
 };
 
@@ -75,11 +75,28 @@ function loop() {
   ctx.drawImage(flappyImg, birdX, birdY);
 
   // Draw the Walls
-  //   ctx.fillStyle = "#333";
+  ctx.fillStyle = "#333";
+  ctx.fillRect(wallX, -100, Wall_Width, wallY);
+  ctx.fillRect(wallX, wallY + Wall_Gap, Wall_Width, canvas.height - wallY);
+
+  // Move the Walls
+  wallX -= 1.5;
+  // if the Wall moves out of the frame we need to reset it
+  if (wallX < -50) {
+    wallX = 400;
+    wallY = Math.random() * (canvas.height - Wall_Gap) + Wall_Width;
+  }
 
   // Apply Gravity Mechanism to the Bird and allow it to move
   birdVelocity += birdAcceleration;
   birdY += birdVelocity;
+
+  // Collision Check if bird hits the Wall(s) and Display End Menu if so and End the Game
+  // Collision Check returns true if Wall is hit, otherwise returns false
+  if (collisionCheck()) {
+    endGame();
+    return;
+  }
 
   requestAnimationFrame(loop);
 }
