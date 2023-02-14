@@ -8,11 +8,14 @@
     <title>Flappy Bird</title>
   </head>
   <body>
+    <!-- End-Menu when player loses -->
     <div id="end-menu">
         <h1>Game Over!</h1>
         <p> Score: <span id="end-score"></span></p>
-        <p> Best: <span id="bests-score"></span></p>
+        <p> Best: <span id="best-score"></span></p>
+        <button id="restart-button">Play Again</button>
     </div>
+    <!-- Game Canvas -->
     <div id="game-container">
         <canvas id="game-canvas" width="400" height="600"></canvas>
         <div id="score-display">0</div>
