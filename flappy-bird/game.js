@@ -8,7 +8,8 @@ const flappyImg = new Image();
 flappyImg.src = "assets/flappy_dunk.png";
 
 // Game constant variables
-const Flappy_Speed = -5;
+// Flappy_Speed affects how big the bird can jump
+const Flappy_Speed = -10;
 const Bird_Width = 40;
 const Bird_Height = 30;
 const Wall_Width = 50;
@@ -17,8 +18,8 @@ const Wall_Gap = 125;
 // Bird Variables
 let birdX = 50;
 let birdY = 50;
-let birdVelocity = 0.25;
-let birdAcceleration = 0.25;
+let birdVelocity = 0.85;
+let birdAcceleration = 0.65;
 
 // Wall Variables
 let wallX = 400;
@@ -28,6 +29,9 @@ let wallY = canvas.height - 200;
 let scoreDiv = document.getElementById("score-display");
 let score = 0;
 let highScore = 0;
+
+// Add a boolean variable, so when the Bird passes the wall we can increase the value of the score
+let scored = false;
 
 // Lets user control the bird with the space key
 document.body.onkeyup = function (e) {
@@ -47,7 +51,28 @@ document
 
 // Increase Flappy Bird score
 function increaseScore() {
-  //
+  if (
+    birdX > wallX + Wall_Width &&
+    (birdY < wallY + Wall_Gap || birdY + Bird_Height > wallY + Wall_Gap) &&
+    !scored
+  ) {
+    score++;
+    scoreDiv.innerHTML = score;
+    scored = true;
+  }
+
+  // Set the Counter if the Bird passes the Pipes
+  if (birdX < wallX + Wall_Width) {
+    scored = false;
+  }
+}
+
+// Increase Speed/Difficulty if the Score increases
+function increaseDifficulty() {
+  if (score > 10) {
+    birdVelocity = 0.5;
+    birdAcceleration = 5;
+  }
 }
 
 // Collision Check with Wall
@@ -125,8 +150,8 @@ function displayEndMenu() {
 function restartGame() {
   birdX = 50;
   birdY = 50;
-  birdVelocity = 0.25;
-  birdAcceleration = 0.25;
+  birdVelocity = 0.85;
+  birdAcceleration = 0.65;
 
   wallX = 400;
   wallY = canvas.height - 200;
@@ -172,6 +197,9 @@ function loop() {
     return;
   }
 
+  // call increaseScore function to increase the counter
+  increaseScore();
+  //   increaseDifficulty();
   requestAnimationFrame(loop);
 }
 
