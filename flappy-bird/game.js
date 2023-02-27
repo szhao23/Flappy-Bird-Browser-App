@@ -17,8 +17,8 @@ const Wall_Gap = 125;
 // Bird Variables
 let birdX = 50;
 let birdY = 50;
-let birdVelocity = 0.2;
-let birdAcceleration = 0.2;
+let birdVelocity = 0.25;
+let birdAcceleration = 0.25;
 
 // Wall Variables
 let wallX = 400;
@@ -29,11 +29,21 @@ let scoreDiv = document.getElementById("score-display");
 let score = 0;
 let highScore = 0;
 
+// Lets user control the bird with the space key
 document.body.onkeyup = function (e) {
   if (e.code == "Space") {
     birdVelocity = Flappy_Speed;
   }
 };
+
+// Let's the user reset the game if they hit Game Over
+document
+  .getElementById("restart-button")
+  .addEventListener("click", function () {
+    hideEndMenu();
+    restartGame();
+    loop();
+  });
 
 // Increase Flappy Bird score
 function increaseScore() {
@@ -42,7 +52,53 @@ function increaseScore() {
 
 // Collision Check with Wall
 function collisionCheck() {
-  //
+  // Creating bounding Boxes for the bird and the walls
+
+  const birdBox = {
+    x: birdX,
+    y: birdY,
+    width: Bird_Width,
+    height: Bird_Height,
+  };
+
+  const topWallBox = {
+    x: wallX,
+    y: wallY - Wall_Gap + Bird_Height,
+    width: Bird_Width,
+    height: wallY,
+  };
+
+  const bottomWallBox = {
+    x: wallX,
+    y: wallY + Wall_Gap + Bird_Height,
+    width: Wall_Width,
+    height: canvas.height - wallY - Wall_Gap,
+  };
+
+  // Checking for Collision with upper Walls
+  if (
+    birdBox.x + birdBox.width > topWallBox.x &&
+    birdBox.x < topWallBox.x + topWallBox.width &&
+    birdBox.y < topWallBox.y
+  ) {
+    return true;
+  }
+
+  // Checking for Collision with lower Walls
+  if (
+    birdBox.x + birdBox.width > bottomWallBox.x &&
+    birdBox.x < bottomWallBox.x + bottomWallBox.width &&
+    birdBox.y + birdBox.height > bottomWallBox.y
+  ) {
+    return true;
+  }
+
+  // Check if the bird hits the boundaries
+  if (birdY < 0 || birdY + Bird_Height > canvas.height) {
+    return true;
+  }
+
+  return false;
 }
 
 // Hide Menu
@@ -53,18 +109,26 @@ function hideEndMenu() {
 
 // Display Menu
 function displayEndMenu() {
-  document.getElementById("end.menu").style.display = "block";
+  document.getElementById("end-menu").style.display = "block";
   gameContainer.classList.add("backdrop-blur");
   document.getElementById("end-score").innerHTML = score;
+
+  // This is how we can update our highscore at the end of the game
+  // If the user has a higher score than the previous
+  if (highScore < score) {
+    highScore = score;
+  }
+  document.getElementById("best-score").innerHTML = highScore;
 }
 
 // Reset Game Function
-function restartGame() {
-  //
-}
+function restartGame() {}
 
 // Quit Game
-function quitGame() {}
+function quitGame() {
+  //   alert("Game over you lost");
+  displayEndMenu();
+}
 
 // Loop
 function loop() {
@@ -94,7 +158,7 @@ function loop() {
   // Collision Check if bird hits the Wall(s) and Display End Menu if so and End the Game
   // Collision Check returns true if Wall is hit, otherwise returns false
   if (collisionCheck()) {
-    endGame();
+    quitGame();
     return;
   }
 
