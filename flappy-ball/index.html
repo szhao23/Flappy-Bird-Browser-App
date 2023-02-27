@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <h1 id="title">Flappy Ball</h1>
+  </head>
+  <body>
+    <!-- End-Menu when player loses -->
+    <div id="end-menu">
+      <h1 id="game-over">Game Over!</h1>
+      <p>Score: <span id="end-score"></span></p>
+      <p>Best: <span id="best-score"></span></p>
+      <p id="try-again">Would you like to try again?</p>
+      <button id="restart-button">Restart</button>
+    </div>
+    <!-- Game Canvas -->
+    <div id="game-container">
+      <canvas id="game-canvas" width="400" height="600"></canvas>
+      <div id="score-display">0</div>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>

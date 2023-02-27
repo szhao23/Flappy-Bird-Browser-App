@@ -8,18 +8,18 @@ const flappyImg = new Image();
 flappyImg.src = "assets/flappy_dunk.png";
 
 // Game constant variables
-// Flappy_Speed affects how big the bird can jump
+// Flappy_Speed affects how big the ball can jump
 const Flappy_Speed = -10;
-const Bird_Width = 40;
-const Bird_Height = 30;
+const Ball_Width = 40;
+const Ball_Height = 30;
 const Wall_Width = 50;
 const Wall_Gap = 125;
 
-// Bird Variables
-let birdX = 50;
-let birdY = 50;
-let birdVelocity = 0.85;
-let birdAcceleration = 0.65;
+// ball Variables
+let ballX = 50;
+let ballY = 50;
+let ballVelocity = 0.85;
+let ballAcceleration = 0.65;
 
 // Wall Variables
 let wallX = 400;
@@ -30,13 +30,13 @@ let scoreDiv = document.getElementById("score-display");
 let score = 0;
 let highScore = 0;
 
-// Add a boolean variable, so when the Bird passes the wall we can increase the value of the score
+// Add a boolean variable, so when the ball passes the wall we can increase the value of the score
 let scored = false;
 
-// Lets user control the bird with the space key
+// Lets user control the ball with the space key
 document.body.onkeyup = function (e) {
   if (e.code == "Space") {
-    birdVelocity = Flappy_Speed;
+    ballVelocity = Flappy_Speed;
   }
 };
 
@@ -49,11 +49,11 @@ document
     loop();
   });
 
-// Increase Flappy Bird score
+// Increase Flappy ball score
 function increaseScore() {
   if (
-    birdX > wallX + Wall_Width &&
-    (birdY < wallY + Wall_Gap || birdY + Bird_Height > wallY + Wall_Gap) &&
+    ballX > wallX + Wall_Width &&
+    (ballY < wallY + Wall_Gap || ballY + Ball_Height > wallY + Wall_Gap) &&
     !scored
   ) {
     score++;
@@ -61,8 +61,8 @@ function increaseScore() {
     scored = true;
   }
 
-  // Set the Counter if the Bird passes the Pipes
-  if (birdX < wallX + Wall_Width) {
+  // Set the Counter if the ball passes the Pipes
+  if (ballX < wallX + Wall_Width) {
     scored = false;
   }
 }
@@ -70,56 +70,56 @@ function increaseScore() {
 // Increase Speed/Difficulty if the Score increases
 function increaseDifficulty() {
   if (score > 10) {
-    birdVelocity = 0.5;
-    birdAcceleration = 5;
+    ballVelocity = 0.5;
+    ballAcceleration = 5;
   }
 }
 
 // Collision Check with Wall
 function collisionCheck() {
-  // Creating bounding Boxes for the bird and the walls
+  // Creating bounding Boxes for the ball and the walls
 
-  const birdBox = {
-    x: birdX,
-    y: birdY,
-    width: Bird_Width,
-    height: Bird_Height,
+  const ballBox = {
+    x: ballX,
+    y: ballY,
+    width: Ball_Width,
+    height: Ball_Height,
   };
 
   const topWallBox = {
     x: wallX,
-    y: wallY - Wall_Gap + Bird_Height,
-    width: Bird_Width,
+    y: wallY - Wall_Gap + Ball_Height,
+    width: Ball_Width,
     height: wallY,
   };
 
   const bottomWallBox = {
     x: wallX,
-    y: wallY + Wall_Gap + Bird_Height,
+    y: wallY + Wall_Gap + Ball_Height,
     width: Wall_Width,
     height: canvas.height - wallY - Wall_Gap,
   };
 
   // Checking for Collision with upper Walls
   if (
-    birdBox.x + birdBox.width > topWallBox.x &&
-    birdBox.x < topWallBox.x + topWallBox.width &&
-    birdBox.y < topWallBox.y
+    ballBox.x + ballBox.width > topWallBox.x &&
+    ballBox.x < topWallBox.x + topWallBox.width &&
+    ballBox.y < topWallBox.y
   ) {
     return true;
   }
 
   // Checking for Collision with lower Walls
   if (
-    birdBox.x + birdBox.width > bottomWallBox.x &&
-    birdBox.x < bottomWallBox.x + bottomWallBox.width &&
-    birdBox.y + birdBox.height > bottomWallBox.y
+    ballBox.x + ballBox.width > bottomWallBox.x &&
+    ballBox.x < bottomWallBox.x + bottomWallBox.width &&
+    ballBox.y + ballBox.height > bottomWallBox.y
   ) {
     return true;
   }
 
-  // Check if the bird hits the boundaries
-  if (birdY < 0 || birdY + Bird_Height > canvas.height) {
+  // Check if the ball hits the boundaries
+  if (ballY < 0 || ballY + Ball_Height > canvas.height) {
     return true;
   }
 
@@ -148,10 +148,10 @@ function displayEndMenu() {
 
 // Reset Game Function
 function restartGame() {
-  birdX = 50;
-  birdY = 50;
-  birdVelocity = 0.85;
-  birdAcceleration = 0.65;
+  ballX = 50;
+  ballY = 50;
+  ballVelocity = 0.85;
+  ballAcceleration = 0.65;
 
   wallX = 400;
   wallY = canvas.height - 200;
@@ -170,8 +170,8 @@ function loop() {
   // Reset the Context after every loop iteration
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.height);
 
-  // Draw the Flappy Bird
-  ctx.drawImage(flappyImg, birdX, birdY);
+  // Draw the Flappy ball
+  ctx.drawImage(flappyImg, ballX, ballY);
 
   // Draw the Walls
   ctx.fillStyle = "#333";
@@ -186,11 +186,11 @@ function loop() {
     wallY = Math.random() * (canvas.height - Wall_Gap) + Wall_Width;
   }
 
-  // Apply Gravity Mechanism to the Bird and allow it to move
-  birdVelocity += birdAcceleration;
-  birdY += birdVelocity;
+  // Apply Gravity Mechanism to the ball and allow it to move
+  ballVelocity += ballAcceleration;
+  ballY += ballVelocity;
 
-  // Collision Check if bird hits the Wall(s) and Display End Menu if so and End the Game
+  // Collision Check if ball hits the Wall(s) and Display End Menu if so and End the Game
   // Collision Check returns true if Wall is hit, otherwise returns false
   if (collisionCheck()) {
     quitGame();
