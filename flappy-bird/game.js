@@ -103,7 +103,7 @@ function collisionCheck() {
 
 // Hide Menu
 function hideEndMenu() {
-  document.getElementById("end.menu").style.display = "none";
+  document.getElementById("end-menu").style.display = "none";
   gameContainer.classList.remove("backdrop-blur");
 }
 
@@ -122,7 +122,17 @@ function displayEndMenu() {
 }
 
 // Reset Game Function
-function restartGame() {}
+function restartGame() {
+  birdX = 50;
+  birdY = 50;
+  birdVelocity = 0.25;
+  birdAcceleration = 0.25;
+
+  wallX = 400;
+  wallY = canvas.height - 200;
+
+  score = 0;
+}
 
 // Quit Game
 function quitGame() {
